@@ -6,6 +6,8 @@ import { UsersModule } from './users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppDataSource } from './database/typeorm.config';
 import { ConfigModule } from '@nestjs/config';
+import { DataSource } from 'typeorm';
+import { TodosModule } from './todos/todos.module';
 
 @Module({
   imports: [
@@ -25,8 +27,12 @@ import { ConfigModule } from '@nestjs/config';
     // }),
     AuthModule,
     UsersModule,
+    TodosModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+
+export class AppModule {
+  constructor(private dataSource: DataSource) {}
+}

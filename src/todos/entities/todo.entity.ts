@@ -1,32 +1,24 @@
+import { User } from 'src/users/user.entity';
 import {
   Column,
   CreateDateColumn,
-  Entity,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
-export enum UserRole {
-  ADMIN = 'admin',
-  USER = 'user',
-}
-
-@Entity('users')
-export class User {
+export class Todo {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column()
-  name: string;
-
-  @Column({ unique: true })
-  email: string;
+  title: string;
 
   @Column()
-  password: string;
+  description: string;
 
-  @Column({ type: 'enum', enum: UserRole, default: UserRole.USER })
-  role: UserRole;
+  @ManyToOne(() => User, { onDelete: 'CASCADE' })
+  user: User;
 
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;
