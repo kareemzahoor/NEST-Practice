@@ -2,11 +2,14 @@ import { User } from 'src/users/user.entity';
 import {
   Column,
   CreateDateColumn,
+  Entity,
+  JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
+@Entity('todos')
 export class Todo {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -14,10 +17,11 @@ export class Todo {
   @Column()
   title: string;
 
-  @Column()
+  @Column({ nullable: true })
   description: string;
 
   @ManyToOne(() => User, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'userId' })
   user: User;
 
   @CreateDateColumn({ type: 'timestamp' })
