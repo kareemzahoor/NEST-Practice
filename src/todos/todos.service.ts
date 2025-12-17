@@ -1,26 +1,73 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateTodoDto } from './dto/create-todo.dto';
 import { UpdateTodoDto } from './dto/update-todo.dto';
+import { Repository } from 'typeorm';
+import { Todo } from './entities/todo.entity';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class TodosService {
-  create(createTodoDto: CreateTodoDto) {
-    return 'This action adds a new todo';
+  constructor(
+    @InjectRepository(Todo)
+    private todosRepository: Repository<Todo>,
+  ) {}
+
+  async create(createTodoDto: CreateTodoDto) {
+    try {
+      const todo = this.todosRepository.create(createTodoDto);
+      await this.todosRepository.save(todo);
+      return todo;
+    } catch (error) {
+      console.log('🚀 ~ TodosService ~ create ~ error:', error);
+      throw new BadRequestException(error.message);
+    }
   }
 
-  findAll() {
-    return `This action returns all todos`;
+  async findAll() {
+    try {
+      const todos = await this.todosRepository.find();
+      return todos;
+    } catch (error) {
+      console.log('🚀 ~ TodosService ~ findAll ~ error:', error);
+      throw new BadRequestException(error.message);
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} todo`;
+  async findOne(id: number | string) {
+    try {
+      // const todo = await this.todosRepository.findOneBy({ id: id.toString() });
+      const todo = await this.todosRepository.findOne({
+        where: { id: id.toString() },
+      });
+      if (!todo) {
+        throw new BadRequestException('Todo not found');
+      }
+      return todo;
+    } catch (error) {
+      console.log('🚀 ~ TodosService ~ findOne ~ error:', error);
+      throw new BadRequestException(error.message);
+    }
   }
 
-  update(id: number, updateTodoDto: UpdateTodoDto) {
-    return `This action updates a #${id} todo`;
+  async update(id: number, updateTodoDto: UpdateTodoDto) {
+    try {
+      const todo = await this.todosRepository.update(id, updateTodoDto);
+      return todo;
+    } catch (error) {
+      console.log('🚀 ~ TodosService ~ update ~ error:', error);
+      throw new BadRequestException(error.message);
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} todo`;
+  async remove(id: number) {
+    try {
+      const todo = await this.todosRepository.delete(id);
+      return {
+        message: 'Todo deleted successfully',
+      };
+    } catch (error) {
+      console.log('🚀 ~ TodosService ~ remove ~ error:', error);
+      throw new BadRequestException(error.message);
+    }
   }
 }
