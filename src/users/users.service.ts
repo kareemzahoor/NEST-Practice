@@ -28,4 +28,14 @@ export class UsersService {
       throw new BadRequestException(error.message);
     }
   }
+
+  async findUserByEmail(email: string) {
+    try {
+      const user = await this.usersRepository.findOne({ where: { email } });
+      return user;
+    } catch (error) {
+      console.log('🚀 ~ UsersService ~ findUserByEmail ~ error:', error);
+      throw new BadRequestException(error.message);
+    }
+  }
 }
