@@ -33,11 +33,11 @@ export class TodosService {
     }
   }
 
-  async findOne(id: number | string) {
+  async findOne(id: string) {
     try {
       // const todo = await this.todosRepository.findOneBy({ id: id.toString() });
       const todo = await this.todosRepository.findOne({
-        where: { id: id.toString() },
+        where: { id },
       });
       if (!todo) {
         throw new BadRequestException('Todo not found');
@@ -49,7 +49,7 @@ export class TodosService {
     }
   }
 
-  async update(id: number, updateTodoDto: UpdateTodoDto) {
+  async update(id: string, updateTodoDto: UpdateTodoDto) {
     try {
       const todo = await this.todosRepository.update(id, updateTodoDto);
       return todo;
@@ -59,7 +59,7 @@ export class TodosService {
     }
   }
 
-  async remove(id: number) {
+  async remove(id: string) {
     try {
       const todo = await this.todosRepository.delete(id);
       return {
