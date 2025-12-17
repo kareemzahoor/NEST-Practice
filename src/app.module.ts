@@ -5,7 +5,7 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppDataSource } from './database/typeorm.config';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { DataSource } from 'typeorm';
 import { TodosModule } from './todos/todos.module';
 
@@ -15,16 +15,19 @@ import { TodosModule } from './todos/todos.module';
       isGlobal: true,
       envFilePath: '.env',
     }),
-    TypeOrmModule.forRoot(AppDataSource.options),
-    // TypeOrmModule.forRoot({
-    //   type: 'postgres' as const,
-    //   host: process.env.DB_HOST,
-    //   port: parseInt(process.env.DB_PORT ?? '3306'),
-    //   username: process.env.DB_USERNAME,
-    //   password: process.env.DB_PASSWORD,
-    //   database: process.env.DB_NAME,
-    //   synchronize: true, // only for development
-    // }),
+    // TypeOrmModule.forRoot(AppDataSource.options),
+    TypeOrmModule.forRoot({
+      type: 'postgres' as const,
+      host: process.env.DB_HOST,
+      port: parseInt(process.env.DB_PORT ?? '6543'),
+      username: process.env.DB_USER,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_NAME,
+      ssl: {
+        rejectUnauthorized: false,
+      },
+      synchronize: true, // only for development
+    }),
     AuthModule,
     UsersModule,
     TodosModule,
@@ -32,7 +35,6 @@ import { TodosModule } from './todos/todos.module';
   controllers: [AppController],
   providers: [AppService],
 })
-
 export class AppModule {
   constructor(private dataSource: DataSource) {}
 }
