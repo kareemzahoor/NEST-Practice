@@ -20,9 +20,9 @@ export class Todo {
   @Column({ nullable: true })
   description: string;
 
-  @ManyToOne(() => User, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'userId' })
-  user: User;
+  // @ManyToOne(() => User, { onDelete: 'CASCADE' })
+  // @JoinColumn({ name: 'userId' })
+  // user: User;
 
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;

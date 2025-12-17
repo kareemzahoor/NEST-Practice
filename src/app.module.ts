@@ -8,6 +8,8 @@ import { AppDataSource } from './database/typeorm.config';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { DataSource } from 'typeorm';
 import { TodosModule } from './todos/todos.module';
+import { User } from './users/user.entity';
+import { Todo } from './todos/entities/todo.entity';
 
 @Module({
   imports: [
@@ -23,6 +25,7 @@ import { TodosModule } from './todos/todos.module';
       username: process.env.DB_USER,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
+      entities: [User, Todo],
       ssl: {
         rejectUnauthorized: false,
       },
